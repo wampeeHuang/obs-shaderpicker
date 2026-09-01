@@ -22,7 +22,6 @@ install.bat        一键安装（GBK+CRLF，兼容中文 cmd）
 provision.ps1      安装逻辑（UTF-8 BOM，PowerShell 5.1）
 plugin/            插件本体：上游 obs-shaderfilter.dll + 163 个 shader + 汉化 zh-CN.ini
 panel/             可视化面板源码（file:// 加载，直连 obs-websocket）
-_runtime/          单元测试与集成测试
 LICENSE / NOTICE   许可证与版权声明
 ```
 
@@ -31,16 +30,6 @@ LICENSE / NOTICE   许可证与版权声明
 - 面板以 OBS Custom Browser Dock 加载本地 `panel/`，无 HTTP 服务器、无端口
 - 面板每 2 秒通过 obs-websocket v5 轮询 OBS 状态：源列表增量同步、当前源滤镜状态回读
 - 同步决策逻辑（`panel/sync.js`）为纯函数，可独立单元测试
-
-## 测试
-
-```bash
-npm install          # devDependencies: jsdom
-npm test
-```
-
-- `test-sync.js`：20 项纯逻辑单测（零依赖）
-- `test-panel-sync.js`：jsdom + mock WebSocket 全链路集成测试（10 项）
 
 ## 版权
 
