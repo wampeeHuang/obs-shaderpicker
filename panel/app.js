@@ -195,9 +195,15 @@ async function syncSources() {
   if (!wsReady || syncing) return;
   syncing = true;
   try {
-    const r = await request('GetInputList');
-    const list = (r.responseData && r.responseData.inputs) || [];
-    applySourceList(list);
+    const sc = await request('GetCurrentProgramScene');
+    const sceneName = sc.responseData && sc.responseData.currentProgramSceneName;
+    if (!sceneName) { applySourceList([]); return; }
+    const si = await request('GetSceneItemList', { sceneName });
+    const items = (si.responseData && si.responseData.sceneItems) || [];
+    // 只列当前场景的源，与 OBS 底部源列表一致（OBS 面板=前层在上，故按 sceneItemIndex 倒序）；同源去重
+    const sorted = items.slice().sort((a, b) => b.sceneItemIndex - a.sceneItemIndex);
+    const names = [...new Set(sorted.map(i => i.sourceName))];
+    applySourceList(names.map(n => ({ inputName: n })));
     await syncFilterState($('#src').value);
   } catch (e) { /* 瞬时错误忽略，下轮再试 */ }
   finally { syncing = false; }
@@ -251,6 +257,7 @@ async function setParams(file, params) {
 // ===== 面板 UI（沿用原版，仅网络层替换 + 相对缩略图路径）=====
 function init() {
   $('#lang-toggle').onclick = () => setLang(lang === 'zh' ? 'en' : 'zh');
+  $('#reload-btn').onclick = () => location.reload();
   setLang(lang);
   $('#detail-collapse').onclick = () => $('#detail').classList.add('hidden');
 
