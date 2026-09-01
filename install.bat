@@ -2,15 +2,29 @@
 setlocal EnableExtensions
 title OBS 着色器选型器 一键安装
 cd /d "%~dp0"
+:: ================= 0. 静默模式 (install.bat /silent) =================
+set "SILENT="
+for %%A in (%*) do if /i "%%~A"=="/silent" set "SILENT=1"
+:: 静默时 PAUSE_CMD=ver>nul。不能用 rem：rem 会吞掉同行的 & exit /b 1
+if defined SILENT (set "PAUSE_CMD=ver>nul") else (set "PAUSE_CMD=pause")
 
 :: ================= 1. 管理员权限 =================
+set "FAIL="
+set "ELEVATED="
 net session >nul 2>&1
 if %errorlevel% neq 0 (
-  echo 需要管理员权限才能写入 OBS 目录, 正在请求提权...
-  echo 请在弹窗中点击"是"。
-  powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
-  exit /b
+  if defined SILENT (
+    echo [ERROR] 需要管理员权限才能写入 OBS 目录, 请以管理员身份运行 install.bat /silent
+    set "FAIL=1"
+  ) else (
+    echo 需要管理员权限才能写入 OBS 目录, 正在请求提权...
+    echo 请在弹窗中点击"是"。
+    powershell -NoProfile -Command "Start-Process -FilePath '%~f0' -Verb RunAs"
+    set "ELEVATED=1"
+  )
 )
+if defined FAIL exit /b 1
+if defined ELEVATED exit /b
 
 :: ================= 2. 定位 OBS 安装目录 =================
 echo   ============================================
@@ -43,22 +57,29 @@ if not defined OBS_DIR (
   echo   若是情况2, 请输入 OBS 安装目录的完整路径, 例如:
   echo     C:\Program Files\obs-studio
   echo.
-  set /p OBS_DIR=输入 OBS 安装目录, 直接回车=中止:
-  if not defined OBS_DIR (
-    echo.
-    echo 未输入路径, 安装中止。
-    echo 提示: 本插件需要先安装 OBS Studio 才能使用。
-    pause
-    exit /b 1
+if defined SILENT (
+  echo [ERROR] 未找到 OBS Studio, 静默安装中止
+  set "FAIL=1"
+)
+  if not defined FAIL (
+    set /p OBS_DIR=输入 OBS 安装目录, 直接回车=中止:
+    if not defined OBS_DIR (
+      echo.
+      echo 未输入路径, 安装中止。
+      echo 提示: 本插件需要先安装 OBS Studio 才能使用。
+      %PAUSE_CMD%
+      set "FAIL=1"
+    )
   )
 )
+if defined FAIL exit /b 1
 if not exist "%OBS_DIR%\bin\64bit\obs64.exe" (
   echo.
   echo [错误] 目录 %OBS_DIR% 下找不到 bin\64bit\obs64.exe。
   echo   请确认这是 OBS Studio 的安装目录。
   echo   若还没装 OBS, 请先安装: https://obsproject.com
   echo.
-  pause
+  %PAUSE_CMD%
   exit /b 1
 )
 echo 检测到 OBS: %OBS_DIR%
@@ -96,7 +117,7 @@ if not exist "%OBS_DIR%\obs-plugins\64bit\obs-websocket.dll" (
   echo   若你的 OBS 较旧, 面板将无法连接, 建议先升级 OBS 再安装。
   echo.
   echo 按任意键继续安装, 或直接关闭本窗口取消。
-  pause >nul
+  %PAUSE_CMD% >nul
 )
 
 :: ================= 5. 拷贝插件 =================
@@ -104,12 +125,12 @@ echo.
 echo [1/4] 拷贝 obs-shaderfilter 插件...
 if not exist "%OBS_DIR%\obs-plugins\64bit" mkdir "%OBS_DIR%\obs-plugins\64bit"
 copy /y "%~dp0plugin\obs-shaderfilter.dll" "%OBS_DIR%\obs-plugins\64bit\" >nul
-if %errorlevel% neq 0 ( echo   [错误] 拷贝 dll 失败 & pause & exit /b 1 )
+if %errorlevel% neq 0 ( echo   [错误] 拷贝 dll 失败 & %PAUSE_CMD% & exit /b 1 )
 echo   DLL OK
 
 if not exist "%OBS_DIR%\data\obs-plugins\obs-shaderfilter" mkdir "%OBS_DIR%\data\obs-plugins\obs-shaderfilter"
 xcopy "%~dp0plugin\data\obs-shaderfilter" "%OBS_DIR%\data\obs-plugins\obs-shaderfilter" /e /i /y /q
-if %errorlevel% geq 4 ( echo   [错误] 拷贝数据文件失败 & pause & exit /b 1 )
+if %errorlevel% geq 4 ( echo   [错误] 拷贝数据文件失败 & %PAUSE_CMD% & exit /b 1 )
 echo   数据 OK (examples / textures / locale / internal)
 
 :: ================= 6. 拷贝面板 =================
@@ -117,7 +138,7 @@ echo.
 echo [2/4] 拷贝选型器面板...
 if not exist "%OBS_DIR%\data\obs-shaderpicker\panel" mkdir "%OBS_DIR%\data\obs-shaderpicker\panel"
 xcopy "%~dp0panel" "%OBS_DIR%\data\obs-shaderpicker\panel" /e /i /y /q
-if %errorlevel% geq 4 ( echo   [错误] 拷贝面板失败 & pause & exit /b 1 )
+if %errorlevel% geq 4 ( echo   [错误] 拷贝面板失败 & %PAUSE_CMD% & exit /b 1 )
 echo   面板 OK
 
 :: ================= 7. 配置 websocket + config.js + dock =================
@@ -126,7 +147,7 @@ echo [3/4] 配置 obs-websocket 与停靠面板...
 set "SP_OBS_DIR=%OBS_DIR:\=/%"
 set "SP_APPDATA=%APPDATA%\obs-studio"
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0provision.ps1"
-if %errorlevel% neq 0 ( echo   [错误] 配置失败 & pause & exit /b 1 )
+if %errorlevel% neq 0 ( echo   [错误] 配置失败 & %PAUSE_CMD% & exit /b 1 )
 echo   配置 OK
 
 :: ================= 8. 完成 =================
@@ -147,5 +168,5 @@ echo.
 echo   安装完成! 请打开 OBS 开始使用。
 echo.
 echo   按任意键退出本窗口...
-pause >nul
+  %PAUSE_CMD% >nul
 exit /b 0
