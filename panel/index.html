@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OBS 着色器选型器</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+<header>
+  <h1 id="app-title">OBS Shader Picker</h1>
+  <div class="search-wrap">
+    <input id="search" type="text" placeholder="Search effects / params…" autocomplete="off">
+  </div>
+  <select id="src" class="src-select" title="Apply to source"></select>
+  <div id="status" class="status">Connecting OBS…</div>
+  <button id="settings-btn" class="settings-btn" title="OBS 连接设置">⚙</button>
+  <button id="lang-toggle" class="lang-btn" title="Switch language">中文</button>
+</header>
+<div id="preview" class="preview hidden">
+  <img id="preview-img" alt="效果预览">
+  <div class="preview-info">
+    <span id="preview-name" class="preview-name"></span>
+    <span id="preview-file" class="preview-file"></span>
+  </div>
+</div>
+<div class="layout">
+  <aside id="cats"></aside>
+  <main>
+    <div id="toast" class="toast hidden"></div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty hidden">没有匹配的效果</div>
+  </main>
+  <div id="detail" class="detail hidden">
+    <div class="detail-head">
+      <span id="detail-title" class="detail-title">效果参数</span>
+      <span id="detail-src" class="detail-src"></span>
+      <button id="detail-collapse" class="collapse-btn" title="收起参数面板">✕</button>
+    </div>
+    <div id="detail-body" class="detail-body">
+      <div id="params" class="params"><div class="p-empty">点卡片加载参数</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="fold" class="fold">
+  <div class="fold-logo">◧</div>
+</div>
+<div id="settings-modal" class="settings-modal hidden">
+  <div class="settings-box">
+    <h2>OBS 连接设置</h2>
+    <label>OBS WebSocket 地址<input id="s-url" type="text" placeholder="ws://127.0.0.1:4455"></label>
+    <label>WebSocket 密码<input id="s-pass" type="password" placeholder="留空表示未设密码"></label>
+    <label>应用到的源名<input id="s-source" type="text" placeholder="摄像头"></label>
+    <label>滤镜名<input id="s-filter" type="text" placeholder="用户自定义着色器"></label>
+    <label>shader 目录<input id="s-shader" type="text" placeholder="C:/Program Files/obs-studio/data/obs-plugins/obs-shaderfilter/examples/"></label>
+    <div class="settings-actions">
+      <button id="s-save" class="s-btn primary">保存并连接</button>
+      <button id="s-cancel" class="s-btn">取消</button>
+    </div>
+  </div>
+</div>
+<script src="config.js"></script>
+<script src="data.js"></script>
+<script src="sync.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

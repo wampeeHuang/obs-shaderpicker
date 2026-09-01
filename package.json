@@ -1,0 +1,15 @@
+{
+  "name": "obs-shaderpicker",
+  "version": "1.0.0",
+  "description": "obs-shaderfilter 汉化包 + 可视化面板",
+  "private": true,
+  "scripts": {
+    "test": "node _runtime/test-sync.js && node _runtime/test-panel-sync.js"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

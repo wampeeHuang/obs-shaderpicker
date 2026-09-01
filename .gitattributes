@@ -1,0 +1,5 @@
+# 编码关键文件：禁止 git 改写行尾/BOM
+install.bat -text
+使用说明.txt -text
+provision.ps1 -text
+*.dll binary

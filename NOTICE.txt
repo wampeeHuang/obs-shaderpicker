@@ -1,0 +1,24 @@
+NOTICE — 版权与署名
+====================
+
+本安装包由两部分组成，版权与授权不同，请勿混淆：
+
+1) obs-shaderfilter 插件（plugin\ 目录）
+   - 上游作者：Oncorporation（fork 自 nleseul/obs-shaderfilter）
+   - 项目主页：https://github.com/Oncorporation/obs-shaderfilter
+   - 许可协议：GNU GPL v2（见 LICENSE 文件）
+   - 本包附带的是该插件编译好的 dll 及其数据文件，许可随上游 GPL v2。
+
+2) 汉化 + 可视化选型器面板（panel\ 目录 + 安装脚本 install.bat / provision.ps1）
+   - 由本包作者编写：界面汉化、142 个效果缩略图、参数化面板、一键安装脚本。
+   - 面板为独立的前端文件（HTML/JS/CSS），通过 obs-websocket 与 OBS 通信，
+     不包含上游插件的源代码，属于独立作品。
+
+分发说明
+--------
+本包以 GPL v2 兼容方式分发。若你修改后再分发本包，需以相同许可提供
+对应修改的源代码，并保留本 NOTICE 与 LICENSE。
+
+无担保声明
+----------
+本软件按“现状”提供，不附带任何明示或暗示的担保（见 GPL v2 第 11、12 条）。
