@@ -1,41 +1,68 @@
 # OBS 着色器选型器
 
-obs-shaderfilter 插件的**汉化包 + 可视化面板**。一键安装，无需端口、无需 Node 运行时。
+OBS 直播插件 obs-shaderfilter 的**中文可视化面板**。
+原来 142 个着色效果只能看英文名盲试；装了这个，OBS 里多一个面板，点卡片看预览、调参数，全中文。
 
-- 142 个效果缩略图 + 可视化参数面板
-- 通过 OBS Custom Browser Dock（`file://`）加载，直连 obs-websocket v5
-- 面板与 OBS 实时同步：源列表增删、滤镜状态（"当前"标记）自动回读，改源即同步
-- 安装脚本处理全部前提条件：无 OBS → 提示先装；已有插件 → 覆盖且场景不丢；OBS 运行中 → 自动关闭并轮询等待
+![面板在 OBS 里的效果](docs/screenshot-in-obs.png)
+*Dock → 着色器选型器，选中效果后右侧出参数面板*
 
-## 快速开始
+## 装之前
 
-1. 下载 [最新 Release](https://github.com/wampeeHuang/obs-shaderpicker/releases) 里的 `OBS着色器选型器-汉化包-v1.zip`
-2. 解压，双击 `install.bat`，按提示操作（GBK 编码，中文 cmd 可直接运行）
-3. 打开 OBS → 菜单栏 **Dock** → **着色器选型器**
+- 已装 [OBS Studio](https://obsproject.com/)（28 或更新版本，自带 WebSocket）
+- Windows 系统（安装脚本是 .bat）
+- 没装过这个插件也完全 OK，安装脚本会自动处理
 
-详细说明见 `使用说明.txt`。
+## 安装（30 秒）
 
-## 目录结构
+**方式一：双击安装（推荐）**
 
+1. 去 [Releases](https://github.com/wampeeHuang/obs-shaderpicker/releases) 下载 `obs-shaderpicker-v1.zip`（约 15MB）
+2. 解压到任意文件夹
+3. 双击 `install.bat`，跟着提示走
+
+安装脚本自动处理所有麻烦：
+
+| 情况 | 脚本行为 |
+| --- | --- |
+| 没装 OBS | 提示你先去装 |
+| 已经装过插件 | 覆盖更新，你的直播场景不丢 |
+| OBS 正在运行 | 自动关掉，装完再让你开 |
+| 安装路径不在默认位置 | 让你手动填 |
+
+**方式二：命令行（agent / 高级用户）**
+
+```bash
+# 下载
+gh release download v1.0.0 -R wampeeHuang/obs-shaderpicker
+
+# 解压 → 读一遍使用说明.txt → 管理员身份运行 install.bat
 ```
-install.bat        一键安装（GBK+CRLF，兼容中文 cmd）
-provision.ps1      安装逻辑（UTF-8 BOM，PowerShell 5.1）
-plugin/            插件本体：上游 obs-shaderfilter.dll + 163 个 shader + 汉化 zh-CN.ini
-panel/             可视化面板源码（file:// 加载，直连 obs-websocket）
-LICENSE / NOTICE   许可证与版权声明
-```
 
-## 工作原理
+装完打开 OBS：菜单栏 **Dock → 着色器选型器**，面板就出来了。
 
-- 面板以 OBS Custom Browser Dock 加载本地 `panel/`，无 HTTP 服务器、无端口
-- 面板每 2 秒通过 obs-websocket v5 轮询 OBS 状态：源列表增量同步、当前源滤镜状态回读
-- 同步决策逻辑（`panel/sync.js`）为纯函数，可独立单元测试
+## 怎么用
+
+- **选效果**：点卡片，效果立刻套到当前源上
+- **调参数**：点卡片后右侧出参数面板，滑块/输入框直接改
+- **换源**：左上角下拉框选要应用到的源
+- **全中文**：142 个效果名 + 参数全部汉化
+
+## 常见问题
+
+**下载的文件名对不上？**
+Release 里 zip 叫 `obs-shaderpicker-v1.zip`（英文名，避免 Windows 中文文件名出错），内容就是汉化包 v1。
+
+**打开面板一直"Connecting OBS…"？**
+查两处：OBS 装了 WebSocket（工具 → WebSocket 服务器设置，默认端口 4455）；面板右上角 ⚙ 里的地址密码和 OBS 一致。
+
+**改 OBS 的源，面板没跟着变？**
+面板每 2 秒自动同步，稍等几秒；或手动切一下左上角下拉框。
+
+**文字乱码？**
+install.bat 是 GBK 编码，中文系统 cmd 直接运行正常，别用其他编辑器乱改。
 
 ## 版权
 
-| 部分 | 版权 |
-| --- | --- |
-| 插件本体 | [Oncorporation/obs-shaderfilter](https://github.com/Oncorporation/obs-shaderfilter)，GPL-2.0 |
-| 汉化、面板、安装脚本 | 作者原创，见 [NOTICE.txt](NOTICE.txt) |
-
-本项目整体按 **GPL-2.0** 发布（见 [LICENSE](LICENSE)）。插件二进制由上游源码构建，上游源码见上表链接。
+- 插件本体：上游 [Oncorporation/obs-shaderfilter](https://github.com/Oncorporation/obs-shaderfilter)，GPL-2.0
+- 汉化、可视化面板、安装脚本：本仓库作者原创，见 [NOTICE.txt](NOTICE.txt)
+- 本项目整体按 GPL-2.0 发布（[LICENSE](LICENSE)）
