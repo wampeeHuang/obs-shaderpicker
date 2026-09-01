@@ -29,14 +29,26 @@ OBS 直播插件 obs-shaderfilter 的**中文可视化面板**。
 | OBS 正在运行 | 自动关掉，装完再让你开 |
 | 安装路径不在默认位置 | 让你手动填 |
 
-**方式二：命令行（agent / 高级用户）**
+**方式二：命令行静默安装（agent / 无界面自动安装）**
 
-```bash
-# 下载
+适合 agent 或脚本无人值守安装：全程不弹窗、不等待输入，靠退出码判断结果。
+
+```powershell
+# 1. 下载并解压（zip 内是扁平结构，直接解出 install.bat）
 gh release download v1.0.0 -R wampeeHuang/obs-shaderpicker
+tar -xf obs-shaderpicker-v1.zip
 
-# 解压 → 读一遍使用说明.txt → 管理员身份运行 install.bat
+# 2. 管理员权限下运行（写 Program Files 必须提权）
+.\install.bat /silent
+$LASTEXITCODE   # 0 = 安装成功；1 = 失败
 ```
+
+`/silent` 模式特性：
+
+- **无交互**：不弹 UAC、不等待输入、不 pause 阻塞，可放心交给 agent
+- **退出码即结果**：`0` 成功，`1` 失败；失败时输出一行 `[ERROR]` 说明原因（未找到 OBS / 无管理员权限）
+- **必须先提权**：非管理员下直接退出码 1，不会弹窗等你点是
+- OBS 未安装时同样退出码 1，不会停在交互式提示
 
 装完打开 OBS：菜单栏 **Dock → 着色器选型器**。面板出现在窗口**右上角**，是一条侧边栏——把鼠标移到右边缘往左拉，它会徐徐展开；不用时再拉回去收起。
 
