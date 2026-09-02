@@ -30,7 +30,7 @@ obs-shaderpicker-汉化包/
 ├─ NOTICE.txt           版权与署名说明
 ├─ plugin/
 │  ├─ obs-shaderfilter.dll      上游插件本体（已汉化界面）
-│  └─ data/obs-shaderfilter/    插件数据（163 个着色器效果 + 纹理 + 中文界面）
+│  └─ data/obs-shaderfilter/    插件数据（142 个着色器效果 + 纹理 + 中文界面）
 └─ panel/                        选型器面板（可视化界面 + 142 效果缩略图）
 
 

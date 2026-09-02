@@ -16,8 +16,8 @@ OBS 直播插件 obs-shaderfilter 的**中文可视化面板**。
 
 **方式一：双击安装（推荐）**
 
-1. 去 [Releases](https://github.com/wampeeHuang/obs-shaderpicker/releases) 下载 `obs-shaderpicker-v1.zip`（约 15MB）
-2. 解压到任意文件夹
+1. 打开本页，点右上角绿色 **Code → Download ZIP** 下载（约 15MB）
+2. 解压到任意文件夹，进入解出来的 `obs-shaderpicker-main` 文件夹
 3. 双击 `install.bat`，跟着提示走
 
 安装脚本自动处理所有麻烦：
@@ -34,9 +34,9 @@ OBS 直播插件 obs-shaderfilter 的**中文可视化面板**。
 适合 agent 或脚本无人值守安装：全程不弹窗、不等待输入，靠退出码判断结果。
 
 ```powershell
-# 1. 下载并解压（zip 内是扁平结构，直接解出 install.bat）
-gh release download v1.0.0 -R wampeeHuang/obs-shaderpicker
-tar -xf obs-shaderpicker-v1.zip
+# 1. 下载最新代码（需要已装 git）
+git clone --depth 1 https://github.com/wampeeHuang/obs-shaderpicker.git
+cd obs-shaderpicker
 
 # 2. 管理员权限下运行（写 Program Files 必须提权）
 .\install.bat /silent
@@ -62,7 +62,7 @@ $LASTEXITCODE   # 0 = 安装成功；1 = 失败
 ## 常见问题
 
 **下载的文件名对不上？**
-Release 里 zip 叫 `obs-shaderpicker-v1.zip`（英文名，避免 Windows 中文文件名出错），内容就是汉化包 v1。
+页面 Code → Download ZIP 下载的文件叫 `obs-shaderpicker-main.zip`，是 GitHub 自动命名，内容就是最新代码。仓库没有单独的 Release 下载包，直接用这个即可。
 
 **打开面板一直"Connecting OBS…"？**
 查两处：OBS 装了 WebSocket（工具 → WebSocket 服务器设置，默认端口 4455）；面板右上角 ⚙ 里的地址密码和 OBS 一致。
